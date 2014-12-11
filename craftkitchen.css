@@ -1,0 +1,115 @@
+.craftkitchen{
+    text-align:left;
+}
+.craftkitchen .gallery_wrapper{
+    width:100%;
+    overflow:auto;
+    border-width:2px;
+}
+.craftkitchen ul.gallery{
+    margin:0;
+    padding:0;
+    max-height:30em;
+}
+.craftkitchen li.craft{
+    list-style:none;
+    position:relative;
+    float:left;
+    width:18em;
+    min-width:268px;
+    max-height:20em;
+    overflow:auto;
+    margin:0;
+    padding:5px;
+    border-width:1px;
+    border-radius:.25em;
+    box-shadow: 1px 1px 1px 1px rgba(0, 96, 0, 0.5);
+}
+.craftkitchen .craft a.menu{
+    font-size:66%;
+    font-weight:bold;
+}
+.craftkitchen strong{
+    display:inline-block;
+}
+.craftkitchen .details{
+    cursor:default;
+}
+.craftkitchen .description{
+    display:inline-block;
+    clear:both;
+    margin:0 .1em;
+    padding:0 .1em;
+    font-weight:bold;
+    font-family:monospace;
+    white-space:pre-wrap;
+}
+.craftkitchen .propval,
+.craftkitchen .cell,
+.craftkitchen .group{
+    float:left;
+}
+.craftkitchen .group,
+.craftkitchen .details{
+}
+.craftkitchen .group{
+    margin:5px;
+}
+.craftkitchen .propval{
+    clear:both;
+    height:.9em;
+    line-height:.9em;
+    font-size:66%;
+}
+.craftkitchen .propval+.propval{
+    border-top-width:1px;
+    border-top-style:dotted;
+}
+.craftkitchen .cell{
+    
+}
+.craftkitchen ul.group{
+    margin:5px;
+    padding:0 2px 2px;
+    display:block;
+    height:auto;
+    border-width:1px;
+}
+.craftkitchen ul.group>li{
+    display:block;
+    margin:0px;
+    padding:0 2px;
+    list-style:none;
+}
+.craftkitchen ul.group>li+li{
+    border-top-width:1px;
+    border-top-style:dotted;
+}
+.craftkitchen ul.group .prop{
+    width:20em;
+    text-align:left;
+}
+
+.craftkitchen .prop{
+    width:6em;
+    padding-right:.25em;
+    text-align:right;
+    font-family:times new roman;
+}
+.craftkitchen .val{
+    width:2.5em;
+    font-weight:bold;
+    font-family:monospace;
+    font-size:133%;
+    text-align:right;
+}
+.craftkitchen .mass .val,
+.craftkitchen .thrust .val{
+    width:4.5em;
+}
+.craftkitchen .thrust .prop{
+    width:6.5em;
+}
+.craftkitchen .resources .val{
+    width:6em;
+}

@@ -60,6 +60,7 @@
     height:.9em;
     line-height:.9em;
     font-size:66%;
+    white-space:pre;
 }
 .craftkitchen .propval+.propval{
     border-top-width:1px;
@@ -86,17 +87,19 @@
     border-top-style:dotted;
 }
 .craftkitchen ul.group .prop{
-    width:20em;
+    width:18em;
     text-align:left;
 }
 
 .craftkitchen .prop{
+    float:left;
     width:6em;
     padding-right:.25em;
     text-align:right;
     font-family:times new roman;
 }
 .craftkitchen .val{
+    float:right;
     width:2.5em;
     font-weight:bold;
     font-family:monospace;

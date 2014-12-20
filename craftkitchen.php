@@ -18,12 +18,12 @@ if( ! empty( CRAFTKITCHEN::$message ) ){
         </div>
         <p>Upload your craft files to show off and share your tech with the world.<br/>
         Click BROWSE to find your file, and it will show immediately.  If you need to update or remove a file, just use the Contact page.</p>
-        <p>You can include your name in the in-game description, so everyone will know who to thank - or blame.</p>
-        <p><small>This site is for all ages, so keep it clean.  We can\'t be held responsible for user-uploaded content.</small></p>
+        <p>If you\'re logged in, the file will be tagged with your username.  Or, you can include your name in the in-game description.  That way, everyone will know who to thank - or blame. <small>This site is for all ages, so keep it clean.  We can\'t be held responsible for user-uploaded content.</small></p>
         <p>You may link directly to these items, but please also include a link to this page when possible - thanks.</p>';
     
     $dir = '_downloads/uploads';
     $pub_crafts = scandir($dir);
+    $pub_dls = 0;
     foreach( $pub_crafts as $key => $scan_file ){
         $scan_pathname = $dir.'/'.$scan_file;
         if(
@@ -35,21 +35,21 @@ if( ! empty( CRAFTKITCHEN::$message ) ){
         }
         if( class_exists('DOWNLOADER') ){
             $craft_info['dl_info'] = DOWNLOADER::get_info($craft_info['pathname']);
+            $pub_dls += $craft_info['dl_info']['count'];
         }else{
             $craft_info['dl_info'] = false;
         }
         $pub_crafts[$key] = $craft_info;
     }
     // Sort ships here!
-    usort( $pub_crafts,
-        function($a,$b){
-            $a = $a['date'];
-            $b = $b['date'];
-            if( $a === $b ){ return 0; }
-            return $a > $b ? -1 : 1; // Reverse date order.
-        }
-    );
+    usort( $pub_crafts, function($a,$b){
+        $a = $a['date'];
+        $b = $b['date'];
+        if( $a === $b ){ return 0; }
+        return $a > $b ? -1 : 1; // Reverse date order.
+    });
     $return .= '
+        <p>Public Crafts have been downloaded a total of '.number_format($pub_dls).' times.</p>
         <h4>'.count($pub_crafts).' files. <a class="menu" title="Get all these files in a .zip archive." href="_downloads/uploads/Kerbaltek-DLC_">Get Zipped</a></h4>
         <div class="gallery_wrapper">
             <ul class="gallery" style="min-width:'.(count($pub_crafts)*$craft_box_width).'em;">';
@@ -76,6 +76,7 @@ if( ! empty( CRAFTKITCHEN::$message ) ){
         
     $dir = '_downloads/ships';
     $our_crafts = scandir($dir);
+    $our_dls = 0;
     foreach( $our_crafts as $key => $scan_file ){
         $scan_pathname = $dir.'/'.$scan_file;
         if(
@@ -87,6 +88,7 @@ if( ! empty( CRAFTKITCHEN::$message ) ){
         }
         if( class_exists('DOWNLOADER') ){
             $craft_info['dl_info'] = DOWNLOADER::get_info($craft_info['pathname']);
+            $our_dls += $craft_info['dl_info']['count'];
         }else{
             $craft_info['dl_info'] = false;
         }
@@ -102,6 +104,7 @@ if( ! empty( CRAFTKITCHEN::$message ) ){
         }
     );
     $return .= '
+        <p>Kerbaltek Crafts have been downloaded a total of '.number_format($our_dls).' times.</p>
         <h4>'.count($our_crafts).' files. <a class="menu" title="Get all these files in a .zip archive." href="_downloads/ships/Kerbaltek-DLC_">Get Zipped</a></h4>
         <div class="gallery_wrapper">
             <ul class="gallery" style="min-width:'.(count($our_crafts)*$craft_box_width).'em;">';
@@ -131,12 +134,12 @@ return $return;
 
 class CRAFTKITCHEN{
     static
-        $crafts_db_file = './_sqlite/KSP-Craft-Kitchen_TESTING.sqlite3'
-        ,$game_db_file = './_sqlite/KSP-GameData_TESTING.sqlite3'
+        $crafts_db_file = './_sqlite/Kerbaltek.sqlite3'
+        ,$game_db_file = './_sqlite/KSP-GameData.sqlite3'
         ,$admin_email = 'admin@localhost'
         ,$game_root = '_KSP_GameData' // Only for populating DB, NOT production.
-        ,$parts_table = 'parts'
         ,$crafts_table = 'KSP_crafts'
+        ,$parts_table = 'parts'
         ,$max_craft_size = 1048576
         ,$public_uploads = '_downloads/uploads'
         ,$message
@@ -294,7 +297,9 @@ class CRAFTKITCHEN{
         }unset($prop,$val);
         
         $return .= '
-<a class="menu" title="Download '.basename($craft_info['pathname']).'" href="'.$craft_info['pathname'].'">'.basename($craft_info['pathname']);
+<a class="menu" title="Download '.basename($craft_info['pathname']).'" href="'.
+dirname($craft_info['pathname']).'/'.rawurlencode(basename($craft_info['pathname']))
+.'">'.basename($craft_info['pathname']);
         if( ! strstr(
             preg_replace( '/\W+/i', '_', basename($craft_info['pathname']) )
             ,preg_replace( '/\W+/i', '_', $craft_info['ship'] )
@@ -378,8 +383,8 @@ class CRAFTKITCHEN{
         
         if( ! empty($craft_info['stockParts']) ){
             $return .= '
-    <ul class="group">
-        <h4>Stock Parts ('.$craft_info['stockParts'].')</h4>';
+    <h4>Stock Parts ('.$craft_info['stockParts'].')</h4>
+    <ul class="group">';
             foreach( $craft_info['stock_list'] as $vendor => $parts ){
                 $return .= '
         <li>'.$cell_pre.'<strong>'.$vendor.' ('.array_sum($parts).' total, '.count($parts).' unique)</strong>'.$cell_suff.'<div style="clear:both;"></div></li>';
@@ -393,8 +398,8 @@ class CRAFTKITCHEN{
         }
         if( ! empty($craft_info['addonParts']) ){
             $return .= '
-    <ul class="group">
-        <h4>Known Add-Ons ('.$craft_info['addonParts'].')</h4>';
+    <h4>Known Add-Ons ('.$craft_info['addonParts'].')</h4>
+    <ul class="group">';
             foreach( $craft_info['addon_list'] as $vendor => $parts ){
                 $return .= '
         <li>'.$cell_pre.'<strong>'.$vendor.' ('.array_sum($parts).' total, '.count($parts).' unique)</strong>'.$cell_suff.'<div style="clear:both;"></div></li>';
@@ -409,8 +414,8 @@ class CRAFTKITCHEN{
     
         if( ! empty($craft_info['unknown_list']) ){
             $return .= '
-    <ul class="group">
-    <h4>Unknown Add-Ons ('.$craft_info['unknownParts'].')</h4>';
+    <h4>Unknown Add-Ons ('.$craft_info['unknownParts'].')</h4>
+    <ul class="group">';
             $return .= '
         <li>'.$cell_pre.'<strong>('.count($craft_info['unknown_list']).' unique)</strong>'.$cell_suff.'<div style="clear:both;"></div></li>';
             foreach( $craft_info['unknown_list'] as $part => $qty ){
@@ -475,7 +480,7 @@ class CRAFTKITCHEN{
             $time = date('Y-m-d @ H:i:s', $_SERVER['REQUEST_TIME']);
             $log_entry = '';
             $log_entry .= $_SERVER['REMOTE_ADDR'].", ".$time.", ".PHP_EOL;
-            $log_entry .= static::$message;
+            $log_entry .= static::$message.PHP_EOL;
             $log_entry .= 'Output file: '.static::$output_file[0].PHP_EOL;
             $log_entry .= 'Input files ($_FILES):'.PHP_EOL;
             foreach( $_FILES as $file ){
@@ -1137,7 +1142,7 @@ UNION ALL SELECT ";
             if( $return ){
                 static::$message .= 'Uploader: '.$return.PHP_EOL;
             }
-//            static::log_uploads();
+            static::log_uploads();
             @unlink(@$file);
         }
         if( $return ){
@@ -1202,7 +1207,7 @@ UNION ALL SELECT ";
                     $return .= '<p>Here\'s your processed file: <a class="menu extlink" title="Download '.$filename.'." href="?fixer_get=true">'.$filename.'</a></p>';
                     
                     // Gank a copy for us.
-                    $save_dir = './'.get_called_class().'_fixed_ships';
+                    $save_dir = './_'.get_called_class().'_fixed_ships';
                     if( ! is_readable($save_dir) ){ sleep(5); }
                     if( is_writable($save_dir) && is_dir($save_dir)  ){
                         $save_file = $save_dir.'/'.$filename;
@@ -1221,7 +1226,7 @@ UNION ALL SELECT ";
                 $return .= "ERROR: Unrecognizable file content.".PHP_EOL;
             }
             static::$message .= "Fixer: ".PHP_EOL.$return.' in '.round(microtime(true)-$microtime,2).' seconds.';
-//            static::log_uploads();
+            static::log_uploads();
         }
         if( $return ){
             $return = '<pre style="border:1px solid red;">'.$return.'</pre>';
@@ -1584,6 +1589,6 @@ UNION ALL SELECT ";
     }
     
 /* END OF CLASS */
-// The Craft Kitchen was conceived and created by Erickson Swift, copyright 2014.
 }
+// Created by Erickson Swift, copyright 2014.
 ?>

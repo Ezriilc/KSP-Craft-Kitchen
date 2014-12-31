@@ -7,20 +7,6 @@ if( ! empty( CRAFTKITCHEN::$message ) ){
     <pre style="border:1px solid red;"><p>'.CRAFTKITCHEN::$message."\r\n".'<a title="Reset all forms." href="http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'].'">Reset</a></p></pre>';
 }
 
-    $craft_box_width = 22;
-    $return .= '
-    <hr/>
-    <div class="article">
-        <h2>Public Craft Gallery</h2>
-        <h3>Ships & Subassemblies</h3>
-        <div style="float:right;">
-            '.CRAFTKITCHEN::craft_uploader().'
-        </div>
-        <p>Upload your craft files to show off and share your tech with the world.<br/>
-        Click BROWSE to find your file, and it will show immediately.  If you need to update or remove a file, just use the Contact page.</p>
-        <p>If you\'re logged in, the file will be tagged with your username.  Or, you can include your name in the in-game description.  That way, everyone will know who to thank - or blame. <small>This site is for all ages, so keep it clean.  We can\'t be held responsible for user-uploaded content.</small></p>
-        <p>You may link directly to these items, but please also include a link to this page when possible - thanks.</p>';
-    
     $dir = '_downloads/uploads';
     $pub_crafts = scandir($dir);
     $pub_dls = 0;
@@ -48,8 +34,20 @@ if( ! empty( CRAFTKITCHEN::$message ) ){
         if( $a === $b ){ return 0; }
         return $a > $b ? -1 : 1; // Reverse date order.
     });
+    $craft_box_width = 22;
     $return .= '
-        <p>Public Crafts have been downloaded a total of '.number_format($pub_dls).' times.</p>
+    <hr/>
+    <div class="article">
+        <h2>Public Craft Gallery</h2>
+        <h3>Ships & Subassemblies</h3>
+        <div style="float:right;">
+            '.CRAFTKITCHEN::craft_uploader().'
+        </div>
+        <p>Public Crafts have been downloaded a total of <strong>'.number_format($pub_dls).'</strong> times.</p>
+        <p>Upload your craft files to show off and share your tech with the world.<br/>
+        Click BROWSE to find your file, and it will show immediately.  If you need to update or remove a file, just use the Contact page.</p>
+        <p>If you\'re logged in, the file will be tagged with your username.  Or, you can include your name in the in-game description.  That way, everyone will know who to thank - or blame. <small>This site is for all ages, so keep it clean.  We can\'t be held responsible for user-uploaded content.</small></p>
+        <p>You may link directly to these items, but please also include a link to this page when possible - thanks.</p>
         <h4>'.count($pub_crafts).' files. <a class="menu" title="Get all these files in a .zip archive." href="_downloads/uploads/Kerbaltek-DLC_">Get Zipped</a></h4>
         <div class="gallery_wrapper">
             <ul class="gallery" style="min-width:'.(count($pub_crafts)*$craft_box_width).'em;">';
@@ -66,14 +64,6 @@ if( ! empty( CRAFTKITCHEN::$message ) ){
     $return .= '
     </div>';
 
-    $return .= '
-    <hr/>
-    <div class="article">
-        <h2>The Kerbaltek Collection</h2>
-        <h3>Ships & Sub-assemblies</h3>
-        <p>Our ships are all-stock except for MechJeb, and they fly well with or without it.  They\'re designed to be as small and efficient as possible, while still maintaining high performance and flexibility.  Oh yea, um... safety..., or whatever. Please try them out and then tell us what you think.</p>
-        <p>We\'re proud to present the <strong><em>"Kolsys"</em></strong> series of high-efficiency, high-capacity space explorers; <strong><em>"Surfex"</em></strong>, a land, sea and air explorer; and the rest of our collection.  "Kolsys" is a portmanteau of "Kerbol System", since they\'re intended to explore the entire system, in one launch.  As our designs evolve, we add new successes and remove the obsolete and terrible ones.  Check back often for the latest tech.</p>';
-        
     $dir = '_downloads/ships';
     $our_crafts = scandir($dir);
     $our_dls = 0;
@@ -104,7 +94,13 @@ if( ! empty( CRAFTKITCHEN::$message ) ){
         }
     );
     $return .= '
-        <p>Kerbaltek Crafts have been downloaded a total of '.number_format($our_dls).' times.</p>
+    <hr/>
+    <div class="article">
+        <h2>The Kerbaltek Collection</h2>
+        <h3>Ships & Sub-assemblies</h3>
+        <p>Kerbaltek Crafts have been downloaded a total of <strong>'.number_format($our_dls).'</strong> times.</p>
+        <p>Our ships are all-stock except for MechJeb, and they fly well with or without it.  They\'re designed to be as small and efficient as possible, while still maintaining high performance and flexibility.  Oh yea, um... safety..., or whatever. Please try them out and then tell us what you think.</p>
+        <p>We\'re proud to present the <strong><em>"Kolsys"</em></strong> series of high-efficiency, high-capacity space explorers; <strong><em>"Surfex"</em></strong>, a land, sea and air explorer; and the rest of our collection.  "Kolsys" is a portmanteau of "Kerbol System", since they\'re intended to explore the entire system, in one launch.  As our designs evolve, we add new successes and remove the obsolete and terrible ones.  Check back often for the latest tech.</p>
         <h4>'.count($our_crafts).' files. <a class="menu" title="Get all these files in a .zip archive." href="_downloads/ships/Kerbaltek-DLC_">Get Zipped</a></h4>
         <div class="gallery_wrapper">
             <ul class="gallery" style="min-width:'.(count($our_crafts)*$craft_box_width).'em;">';
